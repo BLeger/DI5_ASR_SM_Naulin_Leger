@@ -3,6 +3,7 @@ package polytech.example.tp2b;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -32,11 +33,28 @@ public class MainActivity extends AppCompatActivity {
                 Bundle objetBundle = new Bundle();
                 objetBundle.putString("passInfo", editText.getText().toString());
                 intent.putExtras(objetBundle);
-                startActivity(intent);
+                startActivityForResult(intent, 12); // 12 = id de l'activity
             }
         });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        // on vérifie que le résultat provient de la demande de la main activity
+        if(requestCode == 12) {
+            // on vérifie qu'on reçoit le bon code retour
+            if(resultCode == 1 || resultCode == 2) {
+                Bundle objetbundle = this.getIntent().getExtras();
+
+                if (objetbundle != null && objetbundle.containsKey("hello")) {
+                    String info = objetbundle.getString("hello");
+                    final EditText editText = findViewById(R.id.editText);
+                    editText.setText(info);
+                }
+            }
+        }
     }
 
     @Override
@@ -57,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
