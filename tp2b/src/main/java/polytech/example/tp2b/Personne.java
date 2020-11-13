@@ -1,6 +1,8 @@
 package polytech.example.tp2b;
 
-public class Personne {
+import java.io.Serializable;
+
+public class Personne implements Serializable {
 
     private String nom;
     private String prenom;

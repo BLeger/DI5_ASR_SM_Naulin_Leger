@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
         ImageButton bt = findViewById(R.id.imageButton);
         final MainActivity context = this;
 
+        final EditText textNom = findViewById(R.id.textNom);
+        final EditText textPrenom = findViewById(R.id.textPrenom);
+        final EditText textAge = findViewById(R.id.textAge);
+        Button btnSubmit = findViewById(R.id.btnSubmit);
+
+
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -34,6 +41,23 @@ public class MainActivity extends AppCompatActivity {
                 objetBundle.putString("passInfo", editText.getText().toString());
                 intent.putExtras(objetBundle);
                 startActivityForResult(intent, 12); // 12 = id de l'activity
+            }
+        });
+
+        btnSubmit.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ShowPersonneActivity.class);
+                Bundle objBundle = new Bundle();
+                try {
+                    Personne personne = new Personne(textNom.getText().toString(), textPrenom.getText().toString(), Integer.valueOf(String.valueOf(textAge.getText())));
+                    objBundle.putSerializable("personne", personne);
+                    intent.putExtras(objBundle);
+                    startActivityForResult(intent, 15);
+
+                } catch (NumberFormatException e) {
+                    Toast.makeText(context, "Age doit etre un nombre", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

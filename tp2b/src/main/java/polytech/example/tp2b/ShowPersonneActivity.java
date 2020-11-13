@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class ShowPersonnneActivity extends AppCompatActivity {
+public class ShowPersonneActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +26,13 @@ public class ShowPersonnneActivity extends AppCompatActivity {
         if (objetbundle != null && objetbundle.containsKey("personne")) {
             Personne personne = (Personne) objetbundle.getSerializable("personne");
 
-            nameTextView.setText(R.string.name_label + personne.getNom());
-            nameTextView.setText(R.string.firstname_label + personne.getPrenom());
-            nameTextView.setText(R.string.age_label + personne.getAge());
+            String nameLabel = getString(R.string.name_label);
+            String firstnameLabel = getString(R.string.firstname_label);
+            String ageLabel = getString(R.string.age_label);
+
+            nameTextView.setText(nameLabel + personne.getNom());
+            firstnameTextView.setText(firstnameLabel + personne.getPrenom());
+            ageTextView.setText(ageLabel + personne.getAge());
         }
 
         // Listener bouton return
