@@ -1,0 +1,3 @@
+rootProject.name='TPSystemeMobile'
+include ':tp1'
+include ':tp2b'
