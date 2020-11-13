@@ -48,9 +48,10 @@ public class Activity2 extends AppCompatActivity {
     }
 
     private void returnToMainActivity(int returnCode) {
-        Intent intent = this.getIntent();
-        Bundle bundle = intent.getExtras();
-        bundle.putString("hello", "Hello World");
+        Intent intent = new Intent(this, MainActivity.class);
+        Bundle objetBundle = new Bundle();
+        objetBundle.putString("hello", "Hello World");
+        intent.putExtras(objetBundle);
 
         setResult(returnCode, intent);
         finish();
