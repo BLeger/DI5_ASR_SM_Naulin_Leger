@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == 12) {
             // on vérifie qu'on reçoit le bon code retour
             if(resultCode == 1 || resultCode == 2) {
-                Bundle objetbundle = this.getIntent().getExtras();
+                Bundle objetbundle = data.getExtras();
 
                 if (objetbundle != null && objetbundle.containsKey("hello")) {
                     String info = objetbundle.getString("hello");
