@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     Personne personne = new Personne(textNom.getText().toString(), textPrenom.getText().toString(), Integer.valueOf(String.valueOf(textAge.getText())));
                     objBundle.putSerializable("personne", personne);
                     intent.putExtras(objBundle);
-                    startActivityForResult(intent, 15);
+                    startActivity(intent);
 
                 } catch (NumberFormatException e) {
                     Toast.makeText(context, "Age doit etre un nombre", Toast.LENGTH_SHORT).show();
