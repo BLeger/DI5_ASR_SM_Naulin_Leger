@@ -23,10 +23,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         final EditText editText = findViewById(R.id.editText);
         ImageButton bt = findViewById(R.id.imageButton);
+        final MainActivity context = this;
+
         bt.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(this, Activity2.class);
+                Intent intent = new Intent(context, Activity2.class);
                 Bundle objetBundle = new Bundle();
                 objetBundle.putString("passInfo", editText.getText().toString());
                 intent.putExtras(objetBundle);
