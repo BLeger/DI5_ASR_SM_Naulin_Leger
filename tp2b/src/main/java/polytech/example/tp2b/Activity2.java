@@ -15,11 +15,11 @@ public class Activity2 extends AppCompatActivity {
         setTitle("fenetre 2");
         //récupération du text dans le champ de saisie
         final EditText textchampsaisie = (EditText) findViewById(R.id.nameText);
-        Bundle objetbunble = this.getIntent().getExtras();
+        Bundle objetbundle = this.getIntent().getExtras();
         // récupération de la valeur
 
-        if (objetbunble != null && objetbunble.containsKey("passInfo")) {
-            String InfoPasse = objetbunble.getString("passInfo");
+        if (objetbundle != null && objetbundle.containsKey("passInfo")) {
+            String InfoPasse = objetbundle.getString("passInfo");
             // on affiche l'information dans l'edittext
             textchampsaisie.setText(InfoPasse);
         }
