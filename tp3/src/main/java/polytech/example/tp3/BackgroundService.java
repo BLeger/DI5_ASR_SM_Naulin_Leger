@@ -6,15 +6,18 @@ import android.os.IBinder;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class BackgroundService extends Service {
+public class BackgroundService extends Service implements IBackgroundService{
 
     private Timer timer;
+    private ArrayList<IBackgroundServiceListener> listeners = null;
 
     public BackgroundService() {
+        listeners = new ArrayList<>();
     }
 
     @Override
@@ -38,7 +41,7 @@ public class BackgroundService extends Service {
                 Date now = new Date();
                 SimpleDateFormat format = new SimpleDateFormat("HH-mm-ss");
 
-                Log.d(this.getClass().getName(), format.format(now));
+                fireDataChanged(now);
             }
         }, 0, 1000);
         return START_NOT_STICKY;
@@ -48,6 +51,29 @@ public class BackgroundService extends Service {
     public void onDestroy() {
         Log.d(this.getClass().getName(), "onDestroy");
         this.timer.cancel();
+        this.listeners.clear();
     }
 
+    @Override
+    public void addListener(IBackgroundServiceListener listener) {
+        if(listeners != null){
+            listeners.add(listener);
+        }
+    }
+
+    @Override
+    public void removeListener(IBackgroundServiceListener listener) {
+        if(listeners != null){
+            listeners.remove(listener);
+        }
+    }
+
+    // Notification des listeners
+    private void fireDataChanged(Object data){
+        if(listeners != null){
+            for(IBackgroundServiceListener listener: listeners){
+                listener.dataChanged(data);
+            }
+        }
+    }
 }
