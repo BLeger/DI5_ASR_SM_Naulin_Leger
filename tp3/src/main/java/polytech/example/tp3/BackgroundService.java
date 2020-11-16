@@ -49,5 +49,4 @@ public class BackgroundService extends Service {
         Log.d(this.getClass().getName(), "onDestroy");
         this.timer.cancel();
     }
-
 }

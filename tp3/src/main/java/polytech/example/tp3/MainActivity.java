@@ -31,7 +31,8 @@ public class MainActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.setText("START");
+                Intent intent = new Intent(MainActivity.this, BackgroundService.class);
+                startService(intent);
             }
         });
 
@@ -52,11 +53,9 @@ public class MainActivity extends AppCompatActivity {
         btnStop.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.setText("STOP");
+                Intent intent = new Intent(MainActivity.this, BackgroundService.class);
+                stopService(intent);
             }
         });
-
-        Intent intent = new Intent(this,BackgroundService.class);
-        startService(intent);
     }
 }
