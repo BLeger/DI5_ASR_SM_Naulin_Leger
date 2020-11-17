@@ -14,6 +14,7 @@ import java.util.TimerTask;
 public class BackgroundService extends Service implements IBackgroundService{
 
     private Timer timer;
+    private BackgroundServiceBinder binder;
     private ArrayList<IBackgroundServiceListener> listeners = null;
 
     public BackgroundService() {
@@ -22,14 +23,14 @@ public class BackgroundService extends Service implements IBackgroundService{
 
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
-        throw new UnsupportedOperationException("Not yet implemented");
+        return binder;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         timer = new Timer();
+        binder = new BackgroundServiceBinder(this);
         Log.d(this.getClass().getName(), "onCreate");
     }
 
