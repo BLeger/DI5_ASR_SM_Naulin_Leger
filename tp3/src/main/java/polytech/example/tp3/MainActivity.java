@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
     EditText text;
 
     private ServiceConnection connection;
+    private IBackgroundService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,10 +51,10 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
                 //Création de l’objet Connexion
                 connection = new ServiceConnection() {
                     @Override
-                    public void onServiceConnected(ComponentName name, IBinder service) {
+                    public void onServiceConnected(ComponentName name, IBinder binder) {
                         Log.i("BackgroundService", "Connected!");
-                        IBackgroundService monservice = ((BackgroundServiceBinder)service).getService();
-                        monservice.addListener(MainActivity.this);
+                        service = ((BackgroundServiceBinder)binder).getService();
+                        service.addListener(MainActivity.this);
                     }
 
                     public void onServiceDisconnected(ComponentName name) {
@@ -69,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
         btnDeconnexion.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                text.setText("DECONNEXION");
+                service.removeListener(MainActivity.this);
+                unbindService(connection);
             }
         });
 
