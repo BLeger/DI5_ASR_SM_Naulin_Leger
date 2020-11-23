@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements IBackgroundServiceListener {
 
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
 
     private ServiceConnection connection;
     private IBackgroundService service;
+
+    private boolean serviceStarted = false;
+    private boolean serviceBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +42,29 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
         btnStart.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (serviceStarted) {
+                    Toast.makeText(MainActivity.this, "Le service est déjà démarré", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent intent = new Intent(MainActivity.this, BackgroundService.class);
                 startService(intent);
+                serviceStarted = true;
             }
         });
 
         btnConnexion.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!serviceStarted) {
+                    Toast.makeText(MainActivity.this, "Le service n'est pas démarré", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (serviceBound) {
+                    Toast.makeText(MainActivity.this, "Le service est déjà connecté", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent intent = new Intent(MainActivity.this, BackgroundService.class);
 
                 //Création de l’objet Connexion
@@ -64,22 +83,35 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
 
                 //Connexion au servce
                 bindService(intent,connection,BIND_AUTO_CREATE);
+                serviceBound = true;
             }
         });
 
         btnDeconnexion.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!serviceBound) {
+                    Toast.makeText(MainActivity.this, "Le service est déjà déconnecté", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 service.removeListener(MainActivity.this);
                 unbindService(connection);
+                serviceBound = false;
             }
         });
 
         btnStop.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!serviceStarted) {
+                    Toast.makeText(MainActivity.this, "Le service n'est pas démarré", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this, BackgroundService.class);
                 stopService(intent);
+                serviceStarted = false;
+                serviceBound = false;
             }
         });
     }
