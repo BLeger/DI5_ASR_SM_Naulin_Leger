@@ -108,10 +108,13 @@ public class MainActivity extends AppCompatActivity implements IBackgroundServic
                     Toast.makeText(MainActivity.this, "Le service n'est pas démarré", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (serviceBound) {
+                    Toast.makeText(MainActivity.this, "Le service n'est pas déconnecté", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(MainActivity.this, BackgroundService.class);
                 stopService(intent);
                 serviceStarted = false;
-                serviceBound = false;
             }
         });
     }
