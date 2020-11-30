@@ -50,7 +50,6 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
                 case LoaderCallbackInterface.SUCCESS:
                 {
                     Log.i(TAG, "OpenCV loaded successfully");
-
                     // Load native library after(!) OpenCV initialization
                     mOpenCvCameraView.enableView();
                 } break;
@@ -74,7 +73,6 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_main);
-
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial2_activity_surface_view);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
@@ -134,10 +132,10 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Mat gray = inputFrame.rgba();
+        Mat gray = inputFrame.gray();
         MatToArray(gray);
 
-        //Sutf to do here by the students....
+        gradient();
 
         outarray = stringFromJNI(outarray, w, h);
 
@@ -153,5 +151,30 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
 
     private void MatToArray(Mat gray) {
         gray.get(0, 0, outarray);
+    }
+
+    private void gradient() {
+        tmparray = new byte[w*h];
+        for (int x = 0; x < w; x++)
+        {
+            for (int y = 0; y < h; y++) {
+                if (x == 0 || y == 0 || x == w - 1 || y == h - 1) {
+                    tmparray[x + w * y] = outarray[x + w * y];
+                }
+                else {
+                    int gradH = (outarray[(x-1) + w * y] - outarray[(x+1) * w - y]);
+                    Log.d(TAG, "Valeur Y-1 = " + (x + w * (y-1)) + "\nValeur Y+1 = " + (x + w * (y+1)) +"x = " + x + "y= " + y + "h= " + h + "w= "+ w);
+                    int gradV = (outarray[x + w * (y-1)] - outarray[x + w * (y+1)]);
+                    int gradienttmp = gradH + gradV;
+                    byte gradient = gradIntToByte(gradienttmp);
+                    tmparray[x + w * y] = gradient;
+                }
+            }
+        }
+        outarray = tmparray;
+    }
+
+    private byte gradIntToByte(int x) {
+        return (byte) Math.min(127, Math.max(-128, x));
     }
 }
