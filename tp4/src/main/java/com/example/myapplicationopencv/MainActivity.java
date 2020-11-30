@@ -135,9 +135,9 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         Mat gray = inputFrame.gray();
         MatToArray(gray);
 
-        gradient();
+        outarray = gradient();
 
-        outarray = stringFromJNI(outarray, w, h);
+        //outarray = stringFromJNI(outarray, w, h);
 
         Mat out=ArrayToMat(gray,outarray);
         return out;
@@ -153,17 +153,16 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         gray.get(0, 0, outarray);
     }
 
-    private void gradient() {
+    private byte[] gradient() {
         tmparray = new byte[w*h];
         for (int x = 0; x < w; x++)
         {
             for (int y = 0; y < h; y++) {
-                if (x == 0 || y == 0 || x == w - 1 || y == h - 1) {
+                if (x == 0 || y == 0 || x == w-1 || y == h-1) {
                     tmparray[x + w * y] = outarray[x + w * y];
                 }
                 else {
-                    int gradH = (outarray[(x-1) + w * y] - outarray[(x+1) * w - y]);
-                    Log.d(TAG, "Valeur Y-1 = " + (x + w * (y-1)) + "\nValeur Y+1 = " + (x + w * (y+1)) +"x = " + x + "y= " + y + "h= " + h + "w= "+ w);
+                    int gradH = (outarray[(x-1) + w * y] - outarray[(x+1) + w * y]);
                     int gradV = (outarray[x + w * (y-1)] - outarray[x + w * (y+1)]);
                     int gradienttmp = gradH + gradV;
                     byte gradient = gradIntToByte(gradienttmp);
@@ -171,7 +170,7 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
                 }
             }
         }
-        outarray = tmparray;
+        return tmparray;
     }
 
     private byte gradIntToByte(int x) {
