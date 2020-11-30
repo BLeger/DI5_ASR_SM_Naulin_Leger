@@ -1,7 +1,5 @@
 package com.example.myapplicationopencv;
 
-
-
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraActivity;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
@@ -24,15 +22,24 @@ import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends CameraActivity implements CvCameraViewListener2 {
-    private static final String    TAG = "OCVSample::Activity";
+    private static final String TAG = "OCVSample::Activity";
+
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
+    }
+
+    /**
+     * A native method that is implemented by the 'native-lib' native library,
+     * which is packaged with this application.
+     */
+    public native byte[] stringFromJNI(byte[] data, int w, int h);
 
     private byte[] outarray;
     private byte[] tmparray;
 
     private int w;
-
     private int h;
-
 
     private CameraBridgeViewBase   mOpenCvCameraView;
 
@@ -45,7 +52,6 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
                     Log.i(TAG, "OpenCV loaded successfully");
 
                     // Load native library after(!) OpenCV initialization
-
                     mOpenCvCameraView.enableView();
                 } break;
                 default:
@@ -128,27 +134,24 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
-        Mat gray =inputFrame.gray();
+        Mat gray = inputFrame.rgba();
         MatToArray(gray);
 
         //Sutf to do here by the students....
+
+        outarray = stringFromJNI(outarray, w, h);
 
         Mat out=ArrayToMat(gray,outarray);
         return out;
     }
 
     private Mat ArrayToMat(Mat gray, byte[] grayarray) {
-        // TODO Auto-generated method stub
         Mat out = gray.clone();
         out.put(0,0,grayarray);
         return out;
     }
 
     private void MatToArray(Mat gray) {
-        // TODO Auto-generated method stub
         gray.get(0, 0, outarray);
-
     }
-
-
 }
