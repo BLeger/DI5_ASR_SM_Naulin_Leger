@@ -33,7 +33,7 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
      * A native method that is implemented by the 'native-lib' native library,
      * which is packaged with this application.
      */
-    public native byte[] stringFromJNI(byte[] data, int w, int h);
+    public native byte[] gradientJNI(byte[] data, int w, int h);
 
     private byte[] outarray;
     private byte[] tmparray;
@@ -121,23 +121,21 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
     public void onCameraViewStarted(int width, int height) {
         //mRgba = new Mat(height, width, CvType.CV_8UC4);
         outarray = new byte[width*height];
+        tmparray = new byte[width*height];
         w=width;
         h=height;
-
     }
 
     public void onCameraViewStopped() {
         //mRgba.release();
-
     }
 
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         Mat gray = inputFrame.gray();
         MatToArray(gray);
 
-        outarray = gradient();
-
-        //outarray = stringFromJNI(outarray, w, h);
+        //outarray = gradient(); // Java
+        outarray = gradientJNI(outarray, w, h); // C++
 
         Mat out=ArrayToMat(gray,outarray);
         return out;
@@ -155,25 +153,19 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
 
     private byte[] gradient() {
         tmparray = new byte[w*h];
-        for (int x = 0; x < w; x++)
-        {
+        for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
-                if (x == 0 || y == 0 || x == w-1 || y == h-1) {
+                // On ne traite pas les bordures
+                if (x == 0 || y == 0 || x >= w - 1 || y >= h - 1) {
                     tmparray[x + w * y] = outarray[x + w * y];
-                }
-                else {
-                    int gradH = (outarray[(x-1) + w * y] - outarray[(x+1) + w * y]);
-                    int gradV = (outarray[x + w * (y-1)] - outarray[x + w * (y+1)]);
-                    int gradienttmp = gradH + gradV;
-                    byte gradient = gradIntToByte(gradienttmp);
+                } else {
+                    int gradH = outarray[(x-1) + w * y] - outarray[(x+1) + w * y];
+                    int gradV = outarray[x + w * (y-1)] - outarray[x + w * (y+1)];
+                    byte gradient = (byte) ((gradH + gradV + 255) / 2);
                     tmparray[x + w * y] = gradient;
                 }
             }
         }
         return tmparray;
-    }
-
-    private byte gradIntToByte(int x) {
-        return (byte) Math.min(127, Math.max(-128, x));
     }
 }
