@@ -23,8 +23,8 @@ import java.util.List;
 
 public class MainActivity extends CameraActivity implements CvCameraViewListener2 {
     private static final String TAG = "OCVSample::Activity";
-    private static final int[] matriceH = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
-    private static final int[] matriceV = {-1, -2, 1, 0, 0, 0, 1, 2, 1};
+    private static final int[] matriceX = {-1, 0, 1, -2, 0, 2, -1, 0, 1};
+    private static final int[] matriceY = {-1, -2, -1, 0, 0, 0, 1, 2, 1};
 
     // Used to load the 'native-lib' library on application startup.
     static {
@@ -136,11 +136,11 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         Mat gray = inputFrame.gray();
         MatToArray(gray);
 
-        //outarray = gradient(); // Java
-        //outarray = gradientJNI(outarray, w, h); // C++
-        outarray = filtreSobel(); // Java
+        //gradient(); // Java
+        //tmparray = gradientJNI(outarray, w, h); // C++
+        //filtreSobel(); // Java
 
-        Mat out=ArrayToMat(gray,outarray);
+        Mat out=ArrayToMat(gray,tmparray);
         return out;
     }
 
@@ -171,29 +171,21 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         return tmparray;
     }
 
-    private byte[] filtreSobel() {
+    private void filtreSobel() {
         for (int x = 0; x < w; x++) {
             for (int y = 0; y < h; y++) {
                 // On ne traite pas les bordures
                 if (x == 0 || y == 0 || x >= w - 1 || y >= h - 1) {
                     tmparray[getIndice(x, y)] = outarray[getIndice(x, y)];
                 } else {
-                    int gradH = convolution(matriceH, outarray, x, y);
-                    int gradV = convolution(matriceV, outarray, x, y);
+                    int gradH = convolution(matriceX, outarray, x, y);
+                    int gradV = convolution(matriceY, outarray, x, y);
                     int grad = (int) Math.sqrt(Math.pow(gradH, 2) + Math.pow(gradV, 2));
-                    tmparray[getIndice(x, y)] = (byte) ((grad + 255)/2);
+                    tmparray[getIndice(x, y)] = (byte) grad;
                 }
             }
         }
-        return tmparray;
     }
-
-    /*private void filtreSobel() {
-        byte[] image = {1, 2, 3, 4, 5, 6, 7, 8, 9};
-        w = 3;
-        int result = convolution(matriceH, image, 1, 1);
-
-    }*/
 
     private int convolution(int[] matriceConvolution, byte[] image, int x, int y){
         int k = 0;
