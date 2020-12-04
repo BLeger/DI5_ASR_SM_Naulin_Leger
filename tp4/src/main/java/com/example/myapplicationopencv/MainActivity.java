@@ -36,6 +36,7 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
      * which is packaged with this application.
      */
     public native byte[] gradientJNI(byte[] data, int w, int h);
+    public native byte[] sobelJNI(byte[] data, int w, int h);
 
     private byte[] outarray;
     private byte[] tmparray;
@@ -139,6 +140,7 @@ public class MainActivity extends CameraActivity implements CvCameraViewListener
         //gradient(); // Java
         //tmparray = gradientJNI(outarray, w, h); // C++
         //filtreSobel(); // Java
+        tmparray = sobelJNI(outarray, w, h);
 
         Mat out=ArrayToMat(gray,tmparray);
         return out;
