@@ -38,18 +38,6 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         text = findViewById(R.id.editText);
 
-        /*button.setOnClickListener(new Button.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               try {
-                    URL newURL = new URL("http://www.google.com/");
-                    callWebApi = new CallWebApi(text);
-                    callWebApi.execute(newURL.toString());
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,6 +55,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getResult(GeoIP result) {
+        if (result == null) {
+            Toast.makeText(MainActivity.this, "L'IP saisi est incorrecte", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(MainActivity.this, GeoActivity.class);
         Bundle objBundle = new Bundle();
         objBundle.putSerializable("geoIP", result);

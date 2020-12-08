@@ -48,12 +48,9 @@ class CallWebApi extends AsyncTask<String, String, GeoIP> {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InvalidIPException e) {
+                return null;
             }
-
-            /*String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }*/
 
             in.close();
             return result;
@@ -68,7 +65,7 @@ class CallWebApi extends AsyncTask<String, String, GeoIP> {
         this.activity.getResult(result);
     }
 
-    private GeoIP parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private GeoIP parseXML(XmlPullParser parser) throws XmlPullParserException, IOException, InvalidIPException {
         int eventType = parser.getEventType();
         GeoIP result = new GeoIP();
         while (eventType != XmlPullParser.END_DOCUMENT) {
@@ -82,6 +79,11 @@ class CallWebApi extends AsyncTask<String, String, GeoIP> {
             } // end switch
             eventType = parser.next();
         } // end while
+
+        if (result.getStatus().equals("fail")) {
+            throw new InvalidIPException("L'ip envoyée est incorrecte");
+        }
+
         return result;
     }
 
