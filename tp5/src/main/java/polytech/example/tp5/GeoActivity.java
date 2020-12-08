@@ -19,7 +19,7 @@ public class GeoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_geo);
-        setTitle("Informations de localisation");
+        setTitle("Information de localisation");
 
         buttonReturn = findViewById(R.id.buttonReturn);
         textGeoIP = findViewById(R.id.textGeoIP);
@@ -29,7 +29,7 @@ public class GeoActivity extends AppCompatActivity {
 
         if (objetbundle != null && objetbundle.containsKey("geoIP")) {
             GeoIP geoIP = (GeoIP) objetbundle.getSerializable("geoIP");
-            textGeoIP.setText(geoIP.getCountry());
+            textGeoIP.setText(geoIP.getCountry()+"\n"+geoIP.getRegion()+"\n"+geoIP.getCity()+"\n"+geoIP.getZip());
         }
 
         buttonReturn.setOnClickListener(new Button.OnClickListener() {
