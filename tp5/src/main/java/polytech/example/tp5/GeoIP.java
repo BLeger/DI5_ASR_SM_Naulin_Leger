@@ -1,6 +1,8 @@
 package polytech.example.tp5;
 
-public class GeoIP {
+import java.io.Serializable;
+
+public class GeoIP implements Serializable {
     private String status;
     private String query;
     private String country;

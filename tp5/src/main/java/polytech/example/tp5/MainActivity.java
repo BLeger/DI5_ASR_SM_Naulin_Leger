@@ -2,12 +2,14 @@ package polytech.example.tp5;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -26,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     EditText text;
     CallWebApi callWebApi;
+    String result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,23 +38,12 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         text = findViewById(R.id.editText);
+        final MainActivity context = this;
 
-        button.setOnClickListener(new Button.OnClickListener() {
+        /*button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*try {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    url = new URL("http://www.google.com/");
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                    readStream(in);
-                    urlConnection.disconnect();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    urlConnection.disconnect();
-                }*/
-                try {
+               try {
                     URL newURL = new URL("http://www.google.com/");
                     callWebApi = new CallWebApi(text);
                     callWebApi.execute(newURL.toString());
@@ -59,16 +51,33 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+        });*/
+        button.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent intent = new Intent(context, GeoActivity.class);
+                //Bundle objBundle = new Bundle();
+                try {
+                    String IP = text.getText().toString();
+                    URL url = new URL("http://ip-api.com/xml/"+IP);
+                    callWebApi = new CallWebApi(MainActivity.this);
+                    callWebApi.execute(url.toString());
+                    Log.d("BENOIT", result);
+
+
+                    /*GeoIP geoIP = new GeoIP();
+                    objBundle.putSerializable("geoIP", geoIP);
+                    intent.putExtras(objBundle);
+                    startActivity(intent);*/
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
         });
     }
 
-    private void readStream(InputStream in) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-        StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line + "\n");
-        }
-        text.setText(stringBuilder.toString());
+    public void getResult(String result) {
+        this.result = result;
     }
 }

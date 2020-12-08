@@ -5,6 +5,7 @@ import android.widget.TextView;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -15,30 +16,44 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 class CallWebApi extends AsyncTask<String, String, String> {
-    private TextView mTextView;
+    private MainActivity activity;
 
-    public CallWebApi(TextView mTextView) {
-        this.mTextView = mTextView;
+    public CallWebApi(MainActivity activity) {
+        this.activity = activity;
     }
 
     @Override
     protected String doInBackground(String... params) {
         String inputLine = "";
-        StringBuilder result = null;
+        GeoIP result = null;
         URL url;
 
         try {
-            url = url =new URL(params[0]);
+            url = new URL(params[0]);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            result = new StringBuilder();
-            String line;
+            result = new GeoIP();
 
+            // Parse XML
+            XmlPullParserFactory pullParserFactory;
+            try {
+                pullParserFactory = XmlPullParserFactory.newInstance();
+                XmlPullParser parser = pullParserFactory.newPullParser();
+                parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+                parser.setInput(in, null);
+                result = parseXML(parser);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            /*String line;
             while ((line = reader.readLine()) != null) {
                 result.append(line);
-            }
+            }*/
 
             in.close();
             return result.toString();
@@ -50,7 +65,7 @@ class CallWebApi extends AsyncTask<String, String, String> {
     }
 
     protected void onPostExecute(String result) {
-        mTextView.setText(result);
+        this.activity.getResult(result);
     }
 
     private GeoIP parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
