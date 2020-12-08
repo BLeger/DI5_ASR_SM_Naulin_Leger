@@ -96,6 +96,12 @@ class CallWebApi extends AsyncTask<String, String, GeoIP> {
             result.setCountryCode(parser.nextText());
         } else if (name.equals("country")) {
             result.setCountry(parser.nextText());
+        } else if (name.equals("region")) {
+            result.setRegion(parser.nextText());
+        } else if (name.equals("zip")) {
+            result.setZip(parser.nextText());
+        } else if (name.equals("city")) {
+            result.setCity(parser.nextText());
         }
     }
 }

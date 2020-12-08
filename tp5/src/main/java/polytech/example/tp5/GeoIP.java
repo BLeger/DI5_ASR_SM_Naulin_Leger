@@ -7,6 +7,9 @@ public class GeoIP implements Serializable {
     private String query;
     private String country;
     private String countryCode;
+    private String region;
+    private String zip;
+    private String city;
 
     public String getStatus() {
         return status;
@@ -40,6 +43,30 @@ public class GeoIP implements Serializable {
         this.countryCode = countryCode;
     }
 
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public String getZip() {
+        return zip;
+    }
+
+    public void setZip(String zip) {
+        this.zip = zip;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("GeoIP : [status = ");
@@ -50,6 +77,12 @@ public class GeoIP implements Serializable {
         builder.append(country);
         builder.append(" countryCode = ");
         builder.append(countryCode);
+        builder.append(" region = ");
+        builder.append(region);
+        builder.append(" zip = ");
+        builder.append(zip);
+        builder.append(" city = ");
+        builder.append(city);
         builder.append("]");
 
         return builder.toString();
