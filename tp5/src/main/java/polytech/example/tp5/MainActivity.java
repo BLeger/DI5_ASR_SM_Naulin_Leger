@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button button;
     EditText text;
+    CallWebApi callWebApi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
+                /*try {
                     StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
                     StrictMode.setThreadPolicy(policy);
                     url = new URL("http://www.google.com/");
@@ -48,6 +50,13 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                     urlConnection.disconnect();
+                }*/
+                try {
+                    URL newURL = new URL("http://www.google.com/");
+                    callWebApi = new CallWebApi(text);
+                    callWebApi.execute(newURL.toString());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
             }
         });

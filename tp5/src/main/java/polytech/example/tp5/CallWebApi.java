@@ -28,7 +28,7 @@ class CallWebApi extends AsyncTask<String, String, String> {
         URL url;
 
         try {
-            url = new URL("http://www.google.com");
+            url = url =new URL(params[0]);
 
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
             InputStream in = new BufferedInputStream(urlConnection.getInputStream());
