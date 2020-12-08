@@ -15,7 +15,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-class CallWebApi extends AsyncTask<String, String, String> {
+class CallWebApi extends AsyncTask<String, String, GeoIP> {
     private MainActivity activity;
 
     public CallWebApi(MainActivity activity) {
@@ -23,7 +23,7 @@ class CallWebApi extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected GeoIP doInBackground(String... params) {
         String inputLine = "";
         GeoIP result = null;
         URL url;
@@ -56,15 +56,15 @@ class CallWebApi extends AsyncTask<String, String, String> {
             }*/
 
             in.close();
-            return result.toString();
+            return result;
 
         } catch (Exception e) {
         }
 
-        return "error";
+        return null;
     }
 
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(GeoIP result) {
         this.activity.getResult(result);
     }
 

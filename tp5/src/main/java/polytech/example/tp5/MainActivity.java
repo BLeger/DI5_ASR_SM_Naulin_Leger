@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     EditText text;
     CallWebApi callWebApi;
-    String result;
+    GeoIP result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         text = findViewById(R.id.editText);
         final MainActivity context = this;
+        result = new GeoIP();
 
         /*button.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -62,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
                     URL url = new URL("http://ip-api.com/xml/"+IP);
                     callWebApi = new CallWebApi(MainActivity.this);
                     callWebApi.execute(url.toString());
-                    Log.d("BENOIT", result);
-
 
                     /*GeoIP geoIP = new GeoIP();
                     objBundle.putSerializable("geoIP", geoIP);
@@ -77,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void getResult(String result) {
+    public void getResult(GeoIP result) {
         this.result = result;
+        Log.d("BENOIT", result.toString());
     }
 }
