@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
     Button button;
     EditText text;
     CallWebApi callWebApi;
-    GeoIP result;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         button = findViewById(R.id.button);
         text = findViewById(R.id.editText);
-        final MainActivity context = this;
-        result = new GeoIP();
 
         /*button.setOnClickListener(new Button.OnClickListener() {
             @Override
@@ -56,19 +53,12 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(context, GeoActivity.class);
-                //Bundle objBundle = new Bundle();
+
                 try {
                     String IP = text.getText().toString();
                     URL url = new URL("http://ip-api.com/xml/"+IP);
                     callWebApi = new CallWebApi(MainActivity.this);
                     callWebApi.execute(url.toString());
-
-                    /*GeoIP geoIP = new GeoIP();
-                    objBundle.putSerializable("geoIP", geoIP);
-                    intent.putExtras(objBundle);
-                    startActivity(intent);*/
-
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -77,7 +67,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void getResult(GeoIP result) {
-        this.result = result;
-        Log.d("BENOIT", result.toString());
+        Intent intent = new Intent(MainActivity.this, GeoActivity.class);
+        Bundle objBundle = new Bundle();
+        objBundle.putSerializable("geoIP", result);
+        intent.putExtras(objBundle);
+        startActivity(intent);
     }
 }

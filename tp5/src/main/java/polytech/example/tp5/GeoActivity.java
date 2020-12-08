@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GeoActivity extends AppCompatActivity {
@@ -23,6 +24,13 @@ public class GeoActivity extends AppCompatActivity {
         buttonReturn = findViewById(R.id.buttonReturn);
         textGeoIP = findViewById(R.id.textGeoIP);
         final GeoActivity context = this;
+
+        Bundle objetbundle = this.getIntent().getExtras();
+
+        if (objetbundle != null && objetbundle.containsKey("geoIP")) {
+            GeoIP geoIP = (GeoIP) objetbundle.getSerializable("geoIP");
+            textGeoIP.setText(geoIP.getCountry());
+        }
 
         buttonReturn.setOnClickListener(new Button.OnClickListener() {
             @Override
